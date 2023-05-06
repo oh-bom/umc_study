@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_moon"
+        android:title="moon"
+        android:icon="@drawable/moon"
+        android:iconTint="@color/moon"
+        >
+    </item>
+
+    <item
+        android:id="@+id/menu_cloud"
+        android:title="cloud"
+        android:icon="@drawable/cloud"
+        android:iconTint="@color/cloud"
+        >
+    </item>
+
+    <item
+        android:id="@+id/menu_rabbit"
+        android:title="rabbit"
+        android:icon="@drawable/rabbit"
+        android:iconTint="@color/rabbit"
+        >
+    </item>
+
+</menu>
