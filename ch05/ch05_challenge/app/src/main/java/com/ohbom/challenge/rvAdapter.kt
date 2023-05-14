@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
 
-class rvAdapter(val memos:MutableList<String>):RecyclerView.Adapter<rvAdapter.ViewHolder>() {
+class rvAdapter(val memos:List<Memo>):RecyclerView.Adapter<rvAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): rvAdapter.ViewHolder {
 
@@ -25,7 +25,7 @@ class rvAdapter(val memos:MutableList<String>):RecyclerView.Adapter<rvAdapter.Vi
         holder.bindItems(memos[position])
             holder.itemView.setOnClickListener {
                //     v-> itemClick?.onClick(v,position)
-                memos.removeAt(position)
+                //memos.removeAt(position)
                 notifyItemRemoved(position)
             }
 
@@ -36,9 +36,9 @@ class rvAdapter(val memos:MutableList<String>):RecyclerView.Adapter<rvAdapter.Vi
     }
 
     inner class ViewHolder(itemView: View):RecyclerView.ViewHolder(itemView){
-        fun bindItems(item:String){
+        fun bindItems(item: Memo){
             val rv_text=itemView.findViewById<TextView>(R.id.rvItem)
-            rv_text.text=item
+            rv_text.text=item.content
         }
     }
 }
