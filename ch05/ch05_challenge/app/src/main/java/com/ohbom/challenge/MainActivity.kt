@@ -1,5 +1,6 @@
 package com.ohbom.challenge
 
+import android.content.Context
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -9,6 +10,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.ohbom.challenge.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -22,29 +24,51 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding=ActivityMainBinding.inflate(layoutInflater).also {
+        binding = ActivityMainBinding.inflate(layoutInflater).also {
             setContentView(it.root)
         }
+        val db = AppDB.getInstance(this)
 
-        val db=AppDB.getInstance(this)
-        val rv=binding.recyclerView
-        rvAdapter=rvAdapter(memos)
+        val sharedPref = getSharedPreferences(packageName, MODE_PRIVATE)
+        val rv = binding.recyclerView
+        rvAdapter = rvAdapter(memos, sharedPref)
+        rv.adapter = rvAdapter
+        rv.layoutManager = LinearLayoutManager(this)
+
+        //setResult(db!!)
+
+        //resultLauncher
+        resultLauncher = registerForActivityResult(
+            ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            if (result.resultCode == RESULT_OK) {
+                val memoContent = result.data?.getStringExtra("str")
+                Toast.makeText(this, memoContent, Toast.LENGTH_SHORT).show()
+                memoContent?.let {
+                    var memo = Memo(it)//Memo 객체 추가
+
+                    db!!.memoDao().insert(memo)
 
 
-        rv.adapter=rvAdapter
-        rv.layoutManager=LinearLayoutManager(this)
+                }
+            }
+        }
+    }
+    override fun onResume() {
+        super.onResume()
+        getMemos()
 
-        setResult(db!!)
-        getMemos(db!!)
-
-
+        //setOnClickListener
         binding.addBtn.setOnClickListener {
             var intent=Intent(this,insertMemoActivity::class.java)
-
             resultLauncher.launch(intent)//startAcitivity(intent)
         }
 
-
+        binding.starBtn.setOnClickListener {
+            var intent=Intent(this,BookMarkActivity::class.java)
+            resultLauncher.launch(intent)
+            //startActivity(intent)
+        }
 
     }
 
@@ -57,9 +81,9 @@ class MainActivity : AppCompatActivity() {
             Toast.makeText(this,memoContent,Toast.LENGTH_SHORT).show()
             memoContent?.let{
                 var memo=Memo(it)//Memo 객체 추가
-                if(db!=null){
-                    db.memoDao().insert(memo)
-                }
+
+                db.memoDao().insert(memo)
+
                 //rv만 구현했을때 쓰던거
                 //memos.add(it)
                 //binding.recyclerView.adapter?.notifyItemInserted(memos.size-1)
@@ -68,12 +92,11 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    fun getMemos(db:AppDB){
-        if(db!=null){
-        db.memoDao().selectAll().observe(this, Observer{x->
+    fun getMemos(){
+        db!!.memoDao().selectAll().observe(this, Observer{x->
             memos.clear()
             memos.addAll(x)
             rvAdapter.notifyDataSetChanged()
-        })}
+        })
     }
 }

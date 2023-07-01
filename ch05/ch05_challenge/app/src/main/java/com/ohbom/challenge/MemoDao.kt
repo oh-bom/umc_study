@@ -1,10 +1,7 @@
 package com.ohbom.challenge
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Delete
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 
 @Dao
 
@@ -14,6 +11,9 @@ interface MemoDao {
 
     @Delete
     fun delete(memo: Memo)
+
+    @Query("UPDATE Memo SET like= :like WHERE memoId= :memoId")
+    fun updateLikeByMemoId(memoId:Int,like:Boolean)
 
     @Query("SELECT * FROM Memo")
     fun selectAll(): LiveData<List<Memo>>

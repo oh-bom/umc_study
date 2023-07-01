@@ -9,6 +9,7 @@ import androidx.room.Query
 
 
 interface UserDao {
+
     @Insert
     fun insert(user:User)
 

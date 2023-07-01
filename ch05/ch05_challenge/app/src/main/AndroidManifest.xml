@@ -12,6 +12,15 @@
         android:theme="@style/Theme.Challenge"
         tools:targetApi="31">
         <activity
+            android:name=".BookMarkActivity"
+            android:exported="false" />
+        <activity
+            android:name=".bookMark"
+            android:exported="false" />
+        <activity
+            android:name=".starActivity"
+            android:exported="false" />
+        <activity
             android:name=".insertMemoActivity"
             android:exported="false" />
         <activity
